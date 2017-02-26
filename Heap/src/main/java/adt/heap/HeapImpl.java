@@ -80,28 +80,34 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
 	 * (comparados usando o comparator) elementos na parte de cima da heap.
 	 */
 	private void heapify(int position) {
-		if (position > -1 && this.left(position) < this.size()) {
-			int i = position;
-			if (this.right(i) < this.size()) {
-				if (this.comparator.compare(this.heap[i], this.heap[this.right(i)]) < 0
-						|| this.comparator.compare(this.heap[i], this.heap[this.left(i)]) < 0) {
+		if (position > -1 && position < index) {
 
-					if (this.comparator.compare(this.heap[this.left(i)], this.heap[this.right(i)]) < 0) {
-						Util.swap(this.heap, i, this.right(i));
-						this.heapify(this.right(i));
-
-					} else {
-						Util.swap(this.heap, i, this.left(i));
-						this.heapify(this.left(i));
-					}
-
+			if (left(position) < index) {
+				if (biggerThan(position)){
+					int swap = indexBiggest(left(position), right(position));
+					Util.swap(heap, swap, position);
+					heapify(swap);
 				}
-			} else {
-				if (this.comparator.compare(this.heap[i], this.heap[this.left(i)]) < 0) {
-					Util.swap(heap, i, this.left(i));
+			}else if (left(position) == index) {
+				if ((comparator.compare(this.heap[position], this.heap[left(position)]) < 0)) {
+					Util.swap(heap, position, left(position));
 				}
 			}
 		}
+	}
+
+	private boolean biggerThan(int i) {
+		return ((comparator.compare(this.heap[i], this.heap[left(i)])) < 0
+				|| (comparator.compare(this.heap[i], this.heap[right(i)])) < 0);
+
+	}
+
+	private int indexBiggest(int i, int j) {
+		if (this.comparator.compare((this.heap[i]), this.heap[j]) < 0) {
+			return j;
+		}
+		return i;
+
 	}
 
 	@Override
@@ -115,74 +121,78 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
 
 			int i = index;
 
-			while (i != 0 && (this.comparator.compare(this.heap[i], this.heap[this.parent(i)]) > 0)) {
-				Util.swap(this.heap, i, this.parent(i));
+			while (i != 0 && (this.comparator.compare(element, heap[this.parent(i)])) > 0) {
+				Util.swap(heap, i, this.parent(i));
 				i = this.parent(i);
-			}
 
+			}
 		}
 
 	}
 
+	// Precisamos aplicar o heapify apenas na metade do array, pois todos os
+	// elementos A[n/2 + i]; i = 1,2,3.. sao folhas, sendo assim nao podem
+	// 'descer' mais na arvores
 	@Override
 	public void buildHeap(T[] array) {
-		if (array != null) {
-			while (index != -1) {
-				extractRootElement();
+		if (array != null && array.length > 0) {
+			this.heap = array;
+			this.index = array.length - 1;
+		}
 
-			}
-
-			for (T t : array) {
-				this.insert(t);
-			}
-
-			this.heapify(0);
-
+		for (int i =(array.length / 2) ;  i >= 0; i--) {
+			heapify(i);
 		}
 	}
 
 	@Override
 	public T extractRootElement() {
-		if (index != -1) {
-
+		if (!this.isEmpty()) {
 			T remove = this.heap[0];
-			Util.swap(this.heap, 0, index);
-			this.heap[index] = null;
+			Util.swap(heap, 0, index);
 			index--;
-
-			this.heapify(0);
+			heapify(0);
 			return remove;
 		}
-
 		return null;
 	}
 
 	@Override
 	public T rootElement() {
-		if (this.index == -1) {
-			return null;
+		if (!this.isEmpty()) {
+			return this.heap[0];
 		}
-
-		return this.heap[0];
+		return null;
 	}
 
 	@Override
 	public T[] heapsort(T[] array) {
+
+		Comparator<T> save = this.getComparator();
+
+		this.comparator = new Comparator<T>() {
+
+			@Override
+			public int compare(T o1, T o2) {
+				return o1.compareTo(o2);
+			}
+
+		};
+
+		this.buildHeap(array);
+		T[] sorted = (T[]) new Comparable[heap.length];
+
 		for (T t : array) {
-			this.insert(t);
+			sorted[index] = this.extractRootElement();
 		}
 
-		while (index != -1) {
-			array[index] = this.extractRootElement();
-
-		}
-
-		return array;
+		this.comparator = save;
+		return sorted;
 	}
 
 	@Override
 	public int size() {
-		return index + 1;
+		return this.index + 1;
 	}
 
 	public Comparator<T> getComparator() {
@@ -196,4 +206,5 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
 	public T[] getHeap() {
 		return heap;
 	}
+
 }
