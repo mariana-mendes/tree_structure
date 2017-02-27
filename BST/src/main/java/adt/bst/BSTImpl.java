@@ -175,13 +175,13 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 				} else if (removing.getParent() == null) {
 					removeRoot();
 				} else if (!removing.getRight().isEmpty() && removing.getLeft().isEmpty()) {
-					oneChildren(removing, "right");
+					oneChild(removing, "right");
 
 				} else if (removing.getRight().isEmpty() && !removing.getLeft().isEmpty()) {
-					oneChildren(removing, "left");
+					oneChild(removing, "left");
 
 				} else if (!removing.getRight().isEmpty() && !removing.getLeft().isEmpty()) {
-					twoChildrens(removing);
+					twoChildren(removing);
 
 				}
 
@@ -189,7 +189,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		}
 	}
 
-	private void oneChildren(BSTNode<T> toRemove, String position) {
+	private void oneChild(BSTNode<T> toRemove, String position) {
 		if (position.equals("right")) {
 			toRemove.getRight().setParent(toRemove.getParent());
 
@@ -210,7 +210,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	}
 
-	private void twoChildrens(BSTNode<T> removing) {
+	private void twoChildren(BSTNode<T> removing) {
 		BSTNode<T> sucessor = sucessor(removing.getData());
 		T dataSucessor = sucessor.getData();
 		remove(dataSucessor);
@@ -229,7 +229,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 			remove(sucessor.getData());
 			this.root.setData(dataSucessor);
 		} else {
-			twoChildrens(root);
+			twoChildren(root);
 		}
 
 	}
