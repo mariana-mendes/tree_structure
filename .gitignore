@@ -8,9 +8,10 @@ Heap/walkmod.xml
 Heap/.classpath
 Heap/.project
 Heap/115211452-send.log
-HeapWithNode/bin
-HeapWithNode/.classpath
-HeapWithNode/.project
-HeapWithNode/.settings
+BST/pom.xml
+BST/walkmod.xml
+BST/.classpath
+BST/.project
+BST/115211452-send.log
 
 
