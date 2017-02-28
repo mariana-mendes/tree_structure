@@ -49,8 +49,8 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 		}
 	}
 
-	//"ZigZag" in the node
-	public <T extends Comparable<T>> boolean verifyZigZag(BSTNode<T> node) {
+	// "ZigZag" in the node
+	public boolean verifyZigZag(BSTNode<T> node) {
 		if (!node.isEmpty() && node != null) {
 			return (!node.getLeft().isEmpty() && !node.getLeft().getRight().isEmpty()
 					|| !node.getRight().isEmpty() && !node.getRight().getLeft().isEmpty());
@@ -60,7 +60,7 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 	}
 
 	// to make two rotation if the node have a 'zig-zag'
-	public <T extends Comparable<T>> void doubleRotation(BSTNode<T> node) {
+	public void doubleRotation(BSTNode<T> node) {
 		if (!node.getLeft().isEmpty() && !node.getLeft().getRight().isEmpty()) {
 			Util.leftRotation((BSTNode<T>) node.getLeft());
 			Util.rightRotation(node);
@@ -69,7 +69,7 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 			Util.leftRotation(node);
 		}
 	}
-	
+
 	@Override
 	public void insert(T element) {
 		if (element != null) {
@@ -102,6 +102,5 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 			insert(element, (BSTNode<T>) node.getLeft());
 		}
 	}
-
 
 }
