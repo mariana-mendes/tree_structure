@@ -207,4 +207,32 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
 		return heap;
 	}
 
+	public T[] elementsByLevel(int level) {
+		double init = Math.pow(2, (level - 1));
+		double fim = Math.pow(2, level);
+		int count = 0;
+
+		ArrayList<T> array = new ArrayList<>();
+
+		if (level == 1) {
+			array.add(heap[0]);
+			count++;
+
+		} else {
+
+			for (int i = ((int) init) - 1; i <= fim - 2; i++) {
+				if (heap[i] != null && this.heap.length > i && this.size() > i) {
+					count++;
+				}
+				array.add(heap[i]);
+			}
+		}
+		T[] ans = (T[]) new Comparable[count];
+
+		array.toArray(ans);
+
+		return ans;
+
+	}
+
 }
