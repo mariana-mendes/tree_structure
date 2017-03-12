@@ -1,6 +1,6 @@
-package adt.bst;
+package main.java.adt.bst;
 
-import adt.bt.BTNode;
+import main.java.adt.bt.BTNode;
 
 public class BSTNode<T extends Comparable<T>> extends BTNode<T> {
 	

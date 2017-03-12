@@ -1,6 +1,6 @@
-package adt.bt;
+package main.java.adt.bt;
 
-import adt.bst.BSTNode;
+import main.java.adt.bst.BSTNode;
 
 public class Util {
 
@@ -33,7 +33,8 @@ public class Util {
 	}
 
 	/**
-	 * A rotacao a direita em node deve subir e retornar seu filho a esquerda
+	 * A rotacao a direita em node deve subir seu filho a esquerda s retorna-lo
+	 * em seguida
 	 * 
 	 * @param node
 	 * @return
@@ -59,5 +60,4 @@ public class Util {
 
 		return (BSTNode<T>) left;
 	}
-
 }

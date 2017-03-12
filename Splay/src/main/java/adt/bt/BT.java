@@ -1,4 +1,4 @@
-package adt.bt;
+package main.java.adt.bt;
 
 /**
  * The interface of a generic binary tree (BT). It has nodes containing elements

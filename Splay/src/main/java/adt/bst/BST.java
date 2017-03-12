@@ -1,6 +1,6 @@
-package adt.bst;
+package main.java.adt.bst;
 
-import adt.bt.BT;
+import main.java.adt.bt.BT;
 
 /**
  * The interface of a binary search tree (BST).

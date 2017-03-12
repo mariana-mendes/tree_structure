@@ -1,103 +1,115 @@
-package adt.splaytree;
+package main.java.adt.splaytree;
 
-import adt.bst.BSTImpl;
-import adt.bst.BSTNode;
-import adt.bt.Util;
+import main.java.adt.bst.BSTImpl;
+import main.java.adt.bst.BSTNode;
+import main.java.adt.bt.Util;
 
 public class SplayTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements SplayTree<T> {
 
 	private void splay(BSTNode<T> node) {
-		if (node.getParent() == null)
+
+		if (node == null || node.getParent() == null)
 			return;
 
-		if (node.getParent().getParent() == null) {
-			if (leftChild(node)) {
-				rightRotation((BSTNode<T>) node.getParent());
-			} else {
-				leftRotation((BSTNode<T>) node.getParent());
+		if (node != null && !node.isEmpty()) {
+			if (node.getParent().getParent() == null) {
+
+				if (isLeftChild(node)) {
+					this.rightRotation((BSTNode<T>) node.getParent());
+				} else {
+					this.leftRotation((BSTNode<T>) node.getParent());
+				}
+
+			} else if (leftLeft(node)) {
+
+				this.rightRotation((BSTNode<T>) node.getParent().getParent());
+				this.rightRotation((BSTNode<T>) node.getParent());
+
+			} else if (rightRight(node)) {
+				this.leftRotation((BSTNode<T>) node.getParent().getParent());
+				this.leftRotation((BSTNode<T>) node.getParent());
+
+			} else if (zigZag(node)) {
+				this.leftRotation((BSTNode<T>) node.getParent());
+				this.rightRotation((BSTNode<T>) node.getParent());
+			} else if (zagZig(node)) {
+				this.rightRotation((BSTNode<T>) node.getParent());
+				this.leftRotation((BSTNode<T>) node.getParent());
 			}
 
-			// ZIG_ZIG
-		} else if (inLeft(node)) {
-			rightRotation((BSTNode<T>) node.getParent().getParent());
-			rightRotation((BSTNode<T>) node.getParent());
-		} else if (inRight(node)) {
-			leftRotation((BSTNode<T>) node.getParent().getParent());
-			leftRotation((BSTNode<T>) node.getParent());
-
-			// ZIG_ZAG
-		} else if (zigZagLeft(node)) {
-			leftRotation((BSTNode<T>) node.getParent());
-		} else {
-			rightRotation((BSTNode<T>) node.getParent());
 		}
 
-		splay(node);
-
+		this.splay(node);
 	}
 
 	public void insert(T element) {
 		if (element != null) {
 			super.insert(element);
-			this.splay(super.search(element));
+			BSTNode<T> s = super.search(element);
+			this.splay(s);
 		}
+
 	}
 
 	public BSTNode<T> search(T element) {
-		BSTNode<T> searching = super.search(element);
-		if (searching.isEmpty()) {
-			this.splay((BSTNode<T>) searching.getParent());
+		BSTNode<T> s = super.search(element);
+		if (s.isEmpty()) {
+			splay((BSTNode<T>) s.getParent());
+
 		} else {
-			this.splay(searching);
+			splay(s);
 		}
 
-		return searching;
+		return this.root;
 	}
 
 	public void remove(T element) {
-		BSTNode<T> node = super.search(element);
-		if (node.isEmpty()) {
-			splay((BSTNode<T>) node.getParent());
-		} else {
-			BSTNode<T> parent = (BSTNode<T>) node.getParent();
-			super.remove(node);
-			this.splay(parent);
+		BSTNode<T> s = super.search(element);
+		BSTNode<T> parent = (BSTNode<T>) s.getParent();
+
+		if (!s.isEmpty()) {
+			super.remove(element);
 		}
 
+		this.splay(parent);
+	}
+
+	// AUXILIARES
+	private void leftRotation(BSTNode<T> node) {
+		BSTNode<T> r = Util.leftRotation(node);
+		if (r.getParent() == null) {
+			this.root = r;
+		}
 	}
 
 	private void rightRotation(BSTNode<T> node) {
-		BSTNode<T> no = Util.rightRotation(node);
-		if (no.getParent() == null) {
-			this.root = no;
+		BSTNode<T> r = Util.rightRotation(node);
+		if (r.getParent() == null) {
+			this.root = r;
 		}
 	}
 
-	private void leftRotation(BSTNode<T> node) {
-		BSTNode<T> no = Util.leftRotation(node);
-		if (no.getParent() == null) {
-			this.root = no;
-		}
+	private boolean isLeftChild(BSTNode<T> node) {
+		return (node.getParent().getLeft().equals(node));
 	}
 
-	private boolean leftChild(BSTNode<T> node) {
-		return node.getParent().getLeft().equals(node);
-
+	private boolean leftLeft(BSTNode<T> node) {
+		return (node.getParent().getParent().getLeft().equals(node.getParent())
+				&& node.getParent().getLeft().equals(node));
 	}
 
-	private boolean inLeft(BSTNode<T> node) {
+	private boolean rightRight(BSTNode<T> node) {
+		return (node.getParent().getParent().getRight().equals(node.getParent())
+				&& node.getParent().getRight().equals(node));
+	}
+
+	private boolean zigZag(BSTNode<T> node) {
+		return node.getParent().getRight().equals(node)
+				&& node.getParent().getParent().getLeft().equals(node.getParent());
+	}
+
+	private boolean zagZig(BSTNode<T> node) {
 		return node.getParent().getLeft().equals(node)
-				&& node.getParent().getParent().getLeft().equals(node.getParent());
-	}
-
-	private boolean inRight(BSTNode<T> node) {
-		return node.getParent().getRight().equals(node)
 				&& node.getParent().getParent().getRight().equals(node.getParent());
-	}
-
-	private boolean zigZagLeft(BSTNode<T> node) {
-		return node.getParent().getRight().equals(node)
-				&& node.getParent().getParent().getLeft().equals(node.getParent());
-
 	}
 }
