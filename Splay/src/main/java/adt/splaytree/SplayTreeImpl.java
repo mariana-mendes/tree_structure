@@ -32,6 +32,7 @@ public class SplayTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implement
 			} else if (zigZag(node)) {
 				this.leftRotation((BSTNode<T>) node.getParent());
 				this.rightRotation((BSTNode<T>) node.getParent());
+
 			} else if (zagZig(node)) {
 				this.rightRotation((BSTNode<T>) node.getParent());
 				this.leftRotation((BSTNode<T>) node.getParent());
